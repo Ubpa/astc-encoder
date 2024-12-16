@@ -355,6 +355,8 @@ float compute_symbolic_block_difference_2plane(
 
 	vmask4 u8_mask = get_u8_component_mask(config.profile, blk);
 
+	const float rgbd_k = config.flags & ASTCENC_FLG_MAP_RGBD ? 1.f / std::sqrt(config.rgbd_max) - 1.f : 0.f; //TP: ASTC RGBD:[ubpazhuang]
+
 	// Unpack and compute error for each texel in the partition
 	unsigned int texel_count = bsd.texel_count;
 	for (unsigned int i = 0; i < texel_count; i++)
@@ -394,6 +396,42 @@ float compute_symbolic_block_difference_2plane(
 				1.0f
 			);
 		}
+		//TP: ASTC RGBD:[ubpazhuang]:[BEGIN]
+		// Compare error using a perceptual decode metric for RGBD textures
+		else if (config.flags & ASTCENC_FLG_MAP_RGBD)
+		{
+			// Fail encodings that result in zero weight D pixels. Note that this can cause
+			// "interesting" artifacts if we reject all useful encodings - we typically get max
+			// brightness encodings instead which look just as bad. We recommend users apply a
+			// bias to their stored D value, limiting the lower value to 16 or 32 to avoid
+			// getting small D values post-quantization, but we can't prove it would never
+			// happen, especially at low bit rates ...
+			if (color.lane<3>() == 0.0f)
+			{
+				return -ERROR_CALC_DEFAULT;
+			}
+
+			float SqrtScale = color.lane<3>() / (rgbd_k * color.lane<3>() + 1);
+			float Scale = SqrtScale * SqrtScale;
+			float OldSqrtScale = oldColor.lane<3>() / (rgbd_k * color.lane<3>() + 1);
+			float OldScale = OldSqrtScale * OldSqrtScale;
+
+			// Compute error based on decoded RGBM color
+			color = vfloat4(
+				color.lane<0>() * Scale,
+				color.lane<1>() * Scale,
+				color.lane<2>() * Scale,
+				1.0f
+			);
+
+			oldColor = vfloat4(
+				oldColor.lane<0>() * OldScale,
+				oldColor.lane<1>() * OldScale,
+				oldColor.lane<2>() * OldScale,
+				1.0f
+			);
+		}
+		//TP: ASTC RGBD:[ubpazhuang]:[END]
 
 		vfloat4 error = oldColor - color;
 		error = min(abs(error), 1e15f);
@@ -435,6 +473,8 @@ float compute_symbolic_block_difference_1plane(
 	unpack_weights(bsd, scb, di, false, plane1_weights, nullptr);
 
 	vmask4 u8_mask = get_u8_component_mask(config.profile, blk);
+
+	const float rgbd_k = config.flags & ASTCENC_FLG_MAP_RGBD ? 1.f / std::sqrt(config.rgbd_max) - 1.f : 0.f; //TP: ASTC RGBD:[ubpazhuang]
 
 	vfloat4 summa = vfloat4::zero();
 	for (unsigned int i = 0; i < partition_count; i++)
@@ -491,6 +531,42 @@ float compute_symbolic_block_difference_1plane(
 					1.0f
 				);
 			}
+			//TP: ASTC RGBD:[ubpazhuang]:[BEGIN]
+			// Compare error using a perceptual decode metric for RGBD textures
+			else if (config.flags & ASTCENC_FLG_MAP_RGBD)
+			{
+				// Fail encodings that result in zero weight D pixels. Note that this can cause
+				// "interesting" artifacts if we reject all useful encodings - we typically get max
+				// brightness encodings instead which look just as bad. We recommend users apply a
+				// bias to their stored D value, limiting the lower value to 16 or 32 to avoid
+				// getting small D values post-quantization, but we can't prove it would never
+				// happen, especially at low bit rates ...
+				if (color.lane<3>() == 0.0f)
+				{
+					return -ERROR_CALC_DEFAULT;
+				}
+
+				float SqrtScale = color.lane<3>() / (rgbd_k * color.lane<3>() + 1);
+				float Scale = SqrtScale * SqrtScale;
+				float OldSqrtScale = oldColor.lane<3>() / (rgbd_k * color.lane<3>() + 1);
+				float OldScale = OldSqrtScale * OldSqrtScale;
+
+				// Compute error based on decoded RGBM color
+				color = vfloat4(
+					color.lane<0>() * Scale,
+					color.lane<1>() * Scale,
+					color.lane<2>() * Scale,
+					1.0f
+				);
+
+				oldColor = vfloat4(
+					oldColor.lane<0>() * OldScale,
+					oldColor.lane<1>() * OldScale,
+					oldColor.lane<2>() * OldScale,
+					1.0f
+				);
+			}
+			//TP: ASTC RGBD:[ubpazhuang]:[END]
 
 			vfloat4 error = oldColor - color;
 			error = min(abs(error), 1e15f);

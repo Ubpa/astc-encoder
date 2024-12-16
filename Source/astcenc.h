@@ -389,6 +389,7 @@ static const unsigned int ASTCENC_FLG_SELF_DECOMPRESS_ONLY = 1 << 5;
  * matching the default scale factor.
  */
 static const unsigned int ASTCENC_FLG_MAP_RGBM             = 1 << 6;
+static const unsigned int ASTCENC_FLG_MAP_RGBD             = 1 << 7; //TP: ASTC RGBD:[ubpazhuang]
 
 /**
  * @brief The bit mask of all valid flags.
@@ -396,6 +397,7 @@ static const unsigned int ASTCENC_FLG_MAP_RGBM             = 1 << 6;
 static const unsigned int ASTCENC_ALL_FLAGS =
                               ASTCENC_FLG_MAP_NORMAL |
                               ASTCENC_FLG_MAP_RGBM |
+                              ASTCENC_FLG_MAP_RGBD | //TP: ASTC RGBD:[ubpazhuang]
                               ASTCENC_FLG_USE_ALPHA_WEIGHT |
                               ASTCENC_FLG_USE_PERCEPTUAL |
                               ASTCENC_FLG_USE_DECODE_UNORM8 |
@@ -452,6 +454,11 @@ struct astcenc_config
 
 	/** @brief The RGBM scale factor for the shared multiplier (-rgbm). */
 	float rgbm_m_scale;
+
+	//TP: ASTC RGBD:[ubpazhuang]:[BEGIN]
+	/** @brief The RGBD max. */
+	float rgbd_max;
+	//TP: ASTC RGBD:[ubpazhuang]:[END]
 
 	/**
 	 * @brief The maximum number of partitions searched (-partitioncountlimit).

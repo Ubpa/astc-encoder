@@ -197,6 +197,19 @@ COMPRESSION
            of M above a lower threshold to avoid them quantizing to zero
            during compression. We recommend trying 16/255 or 32/255.
 
+       -rgbd <max>
+           The input texture is an RGBD encoded texture, storing values HDR
+           values between 0 and <max> in an LDR container format with a
+           shared multiplier. Shaders reconstruct the HDR value as:
+
+               float k = 1 / sqrt(max) - 1;
+               vec3 hdr_value = tex.rgb * (tex.a / (k * tex.a + 1))^2;
+
+           The compression behavior of the ASTC format for RGBD data
+           requires that the user's RGBD encoding preprocess keeps values
+           of D above a lower threshold to avoid them quantizing to zero
+           during compression. We recommend trying 16/255 or 32/255.
+
        -perceptual
            The codec should optimize perceptual error, instead of direct
            RMS error. This aims to improves perceived image quality, but

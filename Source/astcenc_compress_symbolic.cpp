@@ -369,7 +369,8 @@ static float compress_symbolic_block_for_partition_1plane(
 	int max_weight_quant = astc::min(static_cast<int>(QUANT_32), quant_limit);
 
 	auto compute_difference = &compute_symbolic_block_difference_1plane;
-	if ((partition_count == 1) && !(config.flags & ASTCENC_FLG_MAP_RGBM))
+	if ((partition_count == 1) && !(config.flags & ASTCENC_FLG_MAP_RGBM)
+		&& !(config.flags & ASTCENC_FLG_MAP_RGBD)) //TP: ASTC RGBD:[ubpazhuang]
 	{
 		compute_difference = &compute_symbolic_block_difference_1plane_1partition;
 	}
