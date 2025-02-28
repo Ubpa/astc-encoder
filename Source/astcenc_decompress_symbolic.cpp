@@ -355,7 +355,7 @@ float compute_symbolic_block_difference_2plane(
 
 	vmask4 u8_mask = get_u8_component_mask(config.profile, blk);
 
-	const float rgbd_k = config.flags & ASTCENC_FLG_MAP_RGBD ? 1.f / std::sqrt(config.rgbd_max) - 1.f : 0.f; //TP: ASTC RGBD:[ubpazhuang]
+	const float rgbd_k = config.flags & ASTCENC_FLG_MAP_RGBD ? 1.f / std::sqrt(config.rgbd_max) - 1.f : 0.f; //Ubpa: ASTC RGBD
 
 	// Unpack and compute error for each texel in the partition
 	unsigned int texel_count = bsd.texel_count;
@@ -396,7 +396,7 @@ float compute_symbolic_block_difference_2plane(
 				1.0f
 			);
 		}
-		//TP: ASTC RGBD:[ubpazhuang]:[BEGIN]
+		//Ubpa: ASTC RGBD:[BEGIN]
 		// Compare error using a perceptual decode metric for RGBD textures
 		else if (config.flags & ASTCENC_FLG_MAP_RGBD)
 		{
@@ -431,7 +431,7 @@ float compute_symbolic_block_difference_2plane(
 				1.0f
 			);
 		}
-		//TP: ASTC RGBD:[ubpazhuang]:[END]
+		//Ubpa: ASTC RGBD:[END]
 
 		vfloat4 error = oldColor - color;
 		error = min(abs(error), 1e15f);
@@ -474,7 +474,7 @@ float compute_symbolic_block_difference_1plane(
 
 	vmask4 u8_mask = get_u8_component_mask(config.profile, blk);
 
-	const float rgbd_k = config.flags & ASTCENC_FLG_MAP_RGBD ? 1.f / std::sqrt(config.rgbd_max) - 1.f : 0.f; //TP: ASTC RGBD:[ubpazhuang]
+	const float rgbd_k = config.flags & ASTCENC_FLG_MAP_RGBD ? 1.f / std::sqrt(config.rgbd_max) - 1.f : 0.f; //Ubpa: ASTC RGBD
 
 	vfloat4 summa = vfloat4::zero();
 	for (unsigned int i = 0; i < partition_count; i++)
@@ -531,7 +531,7 @@ float compute_symbolic_block_difference_1plane(
 					1.0f
 				);
 			}
-			//TP: ASTC RGBD:[ubpazhuang]:[BEGIN]
+			//Ubpa: ASTC RGBD:[BEGIN]
 			// Compare error using a perceptual decode metric for RGBD textures
 			else if (config.flags & ASTCENC_FLG_MAP_RGBD)
 			{
@@ -566,7 +566,7 @@ float compute_symbolic_block_difference_1plane(
 					1.0f
 				);
 			}
-			//TP: ASTC RGBD:[ubpazhuang]:[END]
+			//Ubpa: ASTC RGBD:[END]
 
 			vfloat4 error = oldColor - color;
 			error = min(abs(error), 1e15f);

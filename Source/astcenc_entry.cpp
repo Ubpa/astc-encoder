@@ -236,7 +236,7 @@ static astcenc_error validate_flags(
 	// Flags field must only contain at most a single map type
 	exMask = ASTCENC_FLG_MAP_NORMAL
 	       | ASTCENC_FLG_MAP_RGBM
-	       | ASTCENC_FLG_MAP_RGBD; //TP: ASTC RGBD:[ubpazhuang]
+	       | ASTCENC_FLG_MAP_RGBD; //Ubpa: ASTC RGBD
 	if (popcount(flags & exMask) > 1)
 	{
 		return ASTCENC_ERR_BAD_FLAGS;
@@ -396,7 +396,7 @@ static astcenc_error validate_config(
 #endif
 
 	config.rgbm_m_scale = astc::max(config.rgbm_m_scale, 1.0f);
-	config.rgbd_max = astc::max(config.rgbd_max, 1.0f); //TP: ASTC RGBD:[ubpazhuang]
+	config.rgbd_max = astc::max(config.rgbd_max, 1.0f); //Ubpa: ASTC RGBD
 
 	config.tune_partition_count_limit = astc::clamp(config.tune_partition_count_limit, 1u, 4u);
 	config.tune_2partition_index_limit = astc::clamp(config.tune_2partition_index_limit, 1u, BLOCK_MAX_PARTITIONINGS);
@@ -583,7 +583,7 @@ astcenc_error astcenc_config_init(
 	config.a_scale_radius = 0;
 
 	config.rgbm_m_scale = 0.0f;
-	config.rgbd_max = 0.0f; //TP: ASTC RGBD:[ubpazhuang]
+	config.rgbd_max = 0.0f; //Ubpa: ASTC RGBD
 
 	config.profile = profile;
 
@@ -632,13 +632,13 @@ astcenc_error astcenc_config_init(
 		config.rgbm_m_scale = 5.0f;
 		config.cw_a_weight = 2.0f * config.rgbm_m_scale;
 	}
-	//TP: ASTC RGBD:[ubpazhuang]:[BEGIN]
+	//Ubpa: ASTC RGBD:[BEGIN]
 	else if (flags & ASTCENC_FLG_MAP_RGBD)
 	{
 		config.rgbd_max = 5.0f;
 		config.cw_a_weight = config.rgbd_max;
 	}
-	//TP: ASTC RGBD:[ubpazhuang]:[END]
+	//Ubpa: ASTC RGBD:[END]
 	else // (This is color data)
 	{
 		// This is a very basic perceptual metric for RGB color data, which weights error

@@ -370,7 +370,7 @@ static float compress_symbolic_block_for_partition_1plane(
 
 	auto compute_difference = &compute_symbolic_block_difference_1plane;
 	if ((partition_count == 1) && !(config.flags & ASTCENC_FLG_MAP_RGBM)
-		&& !(config.flags & ASTCENC_FLG_MAP_RGBD)) //TP: ASTC RGBD:[ubpazhuang]
+		&& !(config.flags & ASTCENC_FLG_MAP_RGBD)) //Ubpa: ASTC RGBD
 	{
 		compute_difference = &compute_symbolic_block_difference_1plane_1partition;
 	}

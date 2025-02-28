@@ -608,14 +608,14 @@ static int init_astcenc_config(
 			argidx++;
 			flags |= ASTCENC_FLG_MAP_RGBM;
 		}
-		//TP: ASTC RGBD:[ubpazhuang]:[BEGIN]
+		//Ubpa: ASTC RGBD:[BEGIN]
 		else if (!strcmp(argv[argidx], "-rgbd"))
 		{
 			// Skip over the data value for now
 			argidx++;
 			flags |= ASTCENC_FLG_MAP_RGBD;
 		}
-		//TP: ASTC RGBD:[ubpazhuang]:[END]
+		//Ubpa: ASTC RGBD:[END]
 		else if (!strcmp(argv[argidx], "-perceptual"))
 		{
 			flags |= ASTCENC_FLG_USE_PERCEPTUAL;
@@ -919,7 +919,7 @@ static int edit_astcenc_config(
 			config.rgbm_m_scale = static_cast<float>(atof(argv[argidx - 1]));
 			config.cw_a_weight = 2.0f * config.rgbm_m_scale;
 		}
-		//TP: ASTC RGBD:[ubpazhuang]:[BEGIN]
+		//Ubpa: ASTC RGBD:[BEGIN]
 		else if (!strcmp(argv[argidx], "-rgbd"))
 		{
 			argidx += 2;
@@ -932,7 +932,7 @@ static int edit_astcenc_config(
 			config.rgbd_max = static_cast<float>(atof(argv[argidx - 1]));
 			config.cw_a_weight = config.rgbd_max;
 		}
-		//TP: ASTC RGBD:[ubpazhuang]:[END]
+		//Ubpa: ASTC RGBD:[END]
 		else if (!strcmp(argv[argidx], "-decode_unorm8"))
 		{
 			argidx++;
